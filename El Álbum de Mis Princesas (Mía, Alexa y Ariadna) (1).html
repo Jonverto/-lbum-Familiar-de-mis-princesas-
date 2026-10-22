@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>El Universo de Mis Princesas // Mía, Alexa y Ariadna 👑✨</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Press+Start+2P&family=VT323&family=Caveat:wght@600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #2e1065 0%, #170836 48%, #090316 100%);
+      --text-main: #fffbeb;
+      --text-muted: #f3e8ff;
+      --card-bg: rgba(28, 14, 56, 0.86);
+      --card-border: rgba(244, 114, 182, 0.35);
+      --nav-bg: rgba(15, 6, 32, 0.65);
+      --hero-bg: linear-gradient(135deg, rgba(46, 16, 101, 0.95) 0%, rgba(76, 29, 149, 0.88) 50%, rgba(30, 11, 66, 0.96) 100%);
+      --quote-bg: rgba(0, 0, 0, 0.38);
+      --input-bg: #110626;
+      --modal-bg: #1a0b38;
+    }
+
+    body.light-mode {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #fffdf9 0%, #fce7f3 48%, #ede9fe 100%);
+      --text-main: #2e1065;
+      --text-muted: #581c87;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-border: rgba(219, 39, 119, 0.32);
+      --nav-bg: rgba(255, 248, 252, 0.88);
+      --hero-bg: linear-gradient(135deg, rgba(254, 243, 199, 0.96) 0%, rgba(252, 231, 243, 0.92) 50%, rgba(237, 233, 254, 0.96) 100%);
+      --quote-bg: rgba(236, 72, 153, 0.1);
+      --input-bg: #ffffff;
+      --modal-bg: #fffaff;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    body, html {
+      margin: 0; padding: 0; min-height: 100vh;
+      background: var(--bg-gradient); color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden; transition: background 0.5s ease, color 0.4s ease;
+    }
+
+    .font-serif-title { font-family: 'Playfair Display', serif; }
+    .font-royal { font-family: 'Cinzel Decorative', cursive; }
+    .font-pixel { font-family: 'Press Start 2P', monospace; }
+    .font-vt { font-family: 'VT323', monospace; }
+    .font-handwriting { font-family: 'Caveat', cursive; }
+
+    .pixel-canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+    .postcard-card {
+      position: relative;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.45);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+    .postcard-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(251, 191, 36, 0.85);
+      box-shadow: 0 22px 45px -10px rgba(236, 72, 153, 0.3);
+    }
+
+    .postal-stamp-frame { background: #fbf8f0; border: 4px dashed #db2777; padding: 8px 8px 20px 8px; transform: rotate(-1.5deg); }
+    .vintage-photo-frame { background: #fdfbf7; padding: 10px 10px 28px 10px; border: 1px solid #e7d8bc; transform: rotate(1deg); }
+
+    .postit-note {
+      position: relative;
+      padding: 22px 18px 18px 18px;
+      border-radius: 4px 4px 18px 4px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      transform: rotate(-1.2deg);
+      color: #1f1605;
+    }
+    .postit-tape {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+      width: 76px; height: 22px; background: rgba(255, 255, 255, 0.52); border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .postit-yellow { background: linear-gradient(135deg, #fef08a 0%, #fde047 100%); border-bottom: 3px solid #eab308; }
+    .postit-pink   { background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%); border-bottom: 3px solid #db2777; }
+    .postit-mint   { background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%); border-bottom: 3px solid #059669; }
+    .postit-lilac  { background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%); border-bottom: 3px solid #9333ea; }
+    .postit-sky    { background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 100%); border-bottom: 3px solid #0284c7; }
+
+    .book-container { perspective: 1800px; width: 100%; max-width: 900px; margin: 0 auto; }
+    .book-page {
+      background: linear-gradient(135deg, #fffdf9 0%, #fce7f3 100%); color: #2e1065;
+      border: 3px solid #db2777; box-shadow: 0 15px 45px rgba(0,0,0,0.6);
+      transform-origin: left center; transition: transform 0.55s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+    .book-page.flip-next { transform: rotateY(-75deg) scale(0.96); opacity: 0.2; }
+    .book-page.flip-prev { transform: rotateY(75deg) scale(0.96); opacity: 0.2; }
+
+    .album-btn { background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%); color: #ffffff; font-weight: 700; }
+    .album-btn-ghost { background: rgba(236, 72, 153, 0.12); border: 1px solid rgba(244, 114, 182, 0.4); color: var(--text-main); }
+    .filter-pill.active { background: linear-gradient(135deg, #f472b6 0%, #9333ea 100%); color: #ffffff; font-weight: 700; border-color: transparent; }
+
+    .themed-nav { background: var(--nav-bg); }
+    .themed-hero { background: var(--hero-bg); }
+    .themed-quote { background: var(--quote-bg); }
+    .themed-input { background: var(--input-bg); color: var(--text-main); }
+    .themed-modal { background: var(--modal-bg); color: var(--text-main); }
+  </style>
+</head>
+<body class="relative pb-24">
+
+  <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-5">
+
+    <nav class="themed-nav flex flex-wrap items-center justify-between gap-3 py-3 px-4 sm:px-6 rounded-2xl backdrop-blur-md border border-pink-400/30 mb-6 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-amber-400 flex items-center justify-center text-xl shadow-lg" title="El Álbum de Mis Hijas">
+          👑
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] uppercase tracking-widest text-pink-400 font-bold block">Muro Familiar Exclusivo</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> <span>En Vivo ♥</span>
+            </span>
+          </div>
+          <h1 class="text-sm sm:text-base font-royal tracking-wide">MÍA, ALEXA & ARIADNA</h1>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="bg-black/20 p-1 rounded-xl border border-pink-400/30 flex items-center gap-1">
+          <button onclick="setViewMode('mosaic')" id="viewMosaicBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-500 text-white shadow">🍱 Mosaico</button>
+          <button onclick="setViewMode('book')" id="viewBookBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold opacity-80 hover:opacity-100">📖 Cuento</button>
+        </div>
+
+        <button onclick="toggleColorTheme()" class="album-btn-ghost px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow">
+          <span id="themeIcon">☀️</span>
+        </button>
+
+        <button onclick="openCreatorStudio('postit')" class="album-btn px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg">
+          <span>💌</span><span class="font-bold">Dejar Nota / Foto</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="themed-hero relative rounded-3xl p-6 sm:p-8 mb-8 overflow-hidden border border-pink-400/40 shadow-2xl">
+      <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div class="max-w-xl text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/40 text-pink-300 text-xs font-bold mb-3">
+            <span>👨‍👧‍👧</span><span>De Papá para mis tres grandes amores: Mía, Alexa y Ariadna</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-serif-title font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-pink-400 to-purple-300 leading-tight">
+            Nuestro Rincón Mágico de Recuerdos, Aventuras y Sueños
+          </h2>
+          <p class="text-xs sm:text-sm opacity-90 mt-3 leading-relaxed">
+            Este espacio es solo nuestro. Aquí viven los mundos que creé para ustedes, nuestras fotos favoritas y las notitas que nos dejamos desde cualquier lugar. ¡Siempre estaré cuidándolas!
+          </p>
+        </div>
+
+        <!-- LIENZO PIXEL ART DE CUERPO COMPLETO: LOS 4 JUNTOS -->
+        <div class="shrink-0 flex flex-col items-center bg-black/45 p-3.5 rounded-2xl border-2 border-amber-400/60 shadow-2xl">
+          <div class="relative w-72 sm:w-80 h-36 rounded-xl overflow-hidden border-2 border-pink-400/80 bg-gradient-to-b from-indigo-950 via-purple-950 to-slate-950 shadow-inner">
+            <canvas id="heroFamilyFullCanvas" width="160" height="76" class="w-full h-full pixel-canvas block"></canvas>
+          </div>
+          <div class="grid grid-cols-4 w-full text-center mt-2 pt-1 border-t border-white/10">
+            <span class="font-pixel text-[6px] sm:text-[7px] text-sky-300">★ MÍA</span>
+            <span class="font-pixel text-[6px] sm:text-[7px] text-amber-300">★ PAPÁ</span>
+            <span class="font-pixel text-[6px] sm:text-[7px] text-pink-300">★ ALEXA</span>
+            <span class="font-pixel text-[6px] sm:text-[7px] text-purple-300">★ ARIADNA</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="mosaicViewContainer">
+      <div class="flex flex-col gap-3 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="filterAlbum('all')" id="filter-all" class="filter-pill active px-4 py-1.5 rounded-full text-xs border border-pink-400/30">✨ Todos</button>
+            <button onclick="filterAlbum('worlds')" id="filter-worlds" class="filter-pill px-4 py-1.5 rounded-full text-xs album-btn-ghost">🎮 Mundos Mágicos</button>
+            <button onclick="filterAlbum('postit')" id="filter-postit" class="filter-pill px-4 py-1.5 rounded-full text-xs album-btn-ghost">📝 Post-its</button>
+            <button onclick="filterAlbum('photo')" id="filter-photo" class="filter-pill px-4 py-1.5 rounded-full text-xs album-btn-ghost">📸 Nuestras Fotos</button>
+          </div>
+          <span class="text-[11px] opacity-80 font-medium">Mía · Alexa · Ariadna · Papá</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-black/25 px-3.5 py-2.5 rounded-2xl border border-pink-400/25">
+          <div class="flex flex-wrap items-center gap-1.5" id="eventAlbumsFilterBar">
+            <span class="text-[11px] text-pink-300 font-bold mr-1">📂 Álbumes:</span>
+          </div>
+          <button onclick="openNewEventAlbumModal()" class="album-btn-ghost px-3 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1">
+            <span>➕</span><span>Nuevo Álbum</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="mosaicGrid" class="grid grid-cols-1 md:grid-cols-12 gap-5"></div>
+    </div>
+
+    <div id="bookViewContainer" class="hidden py-2">
+      <div class="book-container">
+        <div id="bookPageContent" class="book-page rounded-3xl p-6 sm:p-10 min-h-[420px] flex flex-col justify-between"></div>
+        <div class="flex items-center justify-between mt-5 px-2">
+          <button onclick="prevBookPage()" class="album-btn-ghost px-4 py-2.5 rounded-xl text-xs font-bold">← Anterior</button>
+          <span id="bookPageIndicator" class="font-serif-title italic text-sm text-pink-300">Página 1</span>
+          <button onclick="nextBookPage()" class="album-btn px-4 py-2.5 rounded-xl text-xs font-bold">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="creatorModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="themed-modal max-w-md w-full rounded-3xl p-6 border-2 border-pink-400/60 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-pink-500/30 pb-3 mb-4">
+        <h3 class="text-sm sm:text-base font-bold text-pink-400">💌 Dejar Nota o Subir Foto</h3>
+        <button onclick="closeCreatorStudio()" class="w-8 h-8 rounded-full bg-rose-500/20 text-rose-300 font-bold text-xs">✕</button>
+      </div>
+
+      <form id="creatorForm" onsubmit="handleCreatePostcard(event)" class="space-y-3.5 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold mb-1 text-amber-300">✍️ ¿Quién escribe?:</label>
+            <select id="inputAuthor" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40 font-bold">
+              <option value="Papá ❤️">👨‍👧‍👧 Papá ❤️</option>
+              <option value="Mía ✨">🌟 Mía ✨</option>
+              <option value="Alexa 💖">🌸 Alexa 💖</option>
+              <option value="Ariadna 💜">🐰 Ariadna 💜</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-pink-300">💖 ¿Para quién es?:</label>
+            <select id="inputRecipient" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40 font-bold">
+              <option value="Mis 3 Princesas">👑 Mis 3 Princesas</option>
+              <option value="Papá">👨‍👧‍👧 Para Papá</option>
+              <option value="Mía">🌟 Para Mía</option>
+              <option value="Alexa">🌸 Para Alexa</option>
+              <option value="Ariadna">🐰 Para Ariadna</option>
+              <option value="Alexa y Ariadna">👯‍♀️ Para las Gemelas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold mb-1 text-pink-300">Estilo de Recuerdo</label>
+            <select id="inputFrameStyle" onchange="togglePostitFields()" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40">
+              <option value="postit">📌 Post-it de Color</option>
+              <option value="vintage">📸 Foto Polaroid</option>
+              <option value="stamp">🎴 Estampilla Mágica</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-pink-300">Álbum Familiar</label>
+            <select id="inputEventAlbum" onchange="checkNewAlbumOption(this)" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40">
+              <option value="General">✨ General</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="customNewAlbumInputWrap" class="hidden">
+          <label class="block font-bold mb-1 text-emerald-300">Nombre del Nuevo Álbum:</label>
+          <input id="inputCustomNewAlbum" type="text" placeholder="Ej: Vacaciones, Cumpleaños..." class="themed-input w-full px-3 py-2 rounded-xl border border-emerald-500/50">
+        </div>
+
+        <div id="postitColorSection">
+          <label class="block font-bold mb-1.5 text-pink-300">Color de tu Post-it</label>
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="cursor-pointer bg-pink-300 text-black px-2 py-1 rounded font-bold"><input type="radio" name="postitColor" value="postit-pink" checked> Rosa</label>
+            <label class="cursor-pointer bg-purple-300 text-black px-2 py-1 rounded font-bold"><input type="radio" name="postitColor" value="postit-lilac"> Lila</label>
+            <label class="cursor-pointer bg-sky-300 text-black px-2 py-1 rounded font-bold"><input type="radio" name="postitColor" value="postit-sky"> Cielo</label>
+            <label class="cursor-pointer bg-yellow-300 text-black px-2 py-1 rounded font-bold"><input type="radio" name="postitColor" value="postit-yellow"> Amarillo</label>
+            <label class="cursor-pointer bg-emerald-300 text-black px-2 py-1 rounded font-bold"><input type="radio" name="postitColor" value="postit-mint"> Menta</label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block font-bold mb-1 text-pink-300">Título</label>
+            <input id="inputTitle" type="text" required placeholder="¡Las amo muchísimo!" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40">
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-pink-300">Emoji</label>
+            <input id="inputEmoji" type="text" value="💖" class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40 text-center">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1 text-pink-300">Mensaje o Dedicatoria</label>
+          <textarea id="inputQuote" rows="3" required placeholder="Escribe aquí tu mensaje..." class="themed-input w-full px-3 py-2 rounded-xl border border-pink-500/40"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1 text-pink-300">Subir Foto (Opcional)</label>
+          <input id="inputImageFile" type="file" accept="image/*" class="w-full text-[11px] file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-pink-500 file:text-white file:font-bold">
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeCreatorStudio()" class="album-btn-ghost flex-1 py-2.5 rounded-xl font-bold">Cancelar</button>
+          <button type="submit" class="album-btn flex-1 py-2.5 rounded-xl font-bold">📌 Pegar en el Muro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="newEventAlbumModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="themed-modal max-w-sm w-full rounded-3xl p-6 border-2 border-pink-400/60 shadow-2xl">
+      <h3 class="text-sm font-bold text-pink-400 mb-3">📂 Crear Álbum Familiar</h3>
+      <form onsubmit="handleCreateEventAlbum(event)" class="space-y-3 text-xs">
+        <input id="newEventAlbumName" type="text" required placeholder="Ej: Momentos con Mía, Gemelas, Viajes..." class="themed-input w-full px-3 py-2.5 rounded-xl border border-pink-500/40">
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeNewEventAlbumModal()" class="album-btn-ghost flex-1 py-2 rounded-xl font-bold">Cancelar</button>
+          <button type="submit" class="album-btn flex-1 py-2 rounded-xl font-bold">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="moveAlbumModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="themed-modal max-w-sm w-full rounded-3xl p-6 border-2 border-pink-400/60 shadow-2xl">
+      <h3 class="text-sm font-bold text-pink-400 mb-2">📂 Mover Recuerdo de Álbum</h3>
+      <form onsubmit="confirmMoveToAlbum(event)" class="space-y-3 text-xs">
+        <select id="moveTargetAlbumSelect" class="themed-input w-full px-3 py-2.5 rounded-xl border border-pink-500/40"></select>
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeMoveAlbumModal()" class="album-btn-ghost flex-1 py-2 rounded-xl font-bold">Cancelar</button>
+          <button type="submit" class="album-btn flex-1 py-2 rounded-xl font-bold">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="theaterModal" class="hidden fixed inset-0 z-50 flex flex-col bg-black/92 backdrop-blur-xl p-2 sm:p-5">
+    <div class="max-w-5xl w-full mx-auto flex items-center justify-between bg-[#1a0b38] border border-pink-400/40 rounded-t-2xl px-4 py-2.5">
+      <h3 id="theaterTitle" class="text-xs sm:text-sm font-bold text-pink-300">Mundo Interactivo</h3>
+      <button onclick="closeTheaterModal()" class="px-3.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold">✕ Cerrar</button>
+    </div>
+    <div class="max-w-5xl w-full mx-auto flex-1 bg-[#090414] border-x border-b border-pink-400/40 rounded-b-2xl overflow-hidden relative flex flex-col">
+      <iframe id="theaterIframe" class="w-full h-full flex-1 border-0" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLgylENlDXij8732zpKhUSHBHbJTZtTlA",
+      authDomain: "album-compt-us.firebaseapp.com",
+      databaseURL: "https://album-compt-us-default-rtdb.firebaseio.com",
+      projectId: "album-compt-us",
+      storageBucket: "album-compt-us.firebasestorage.app",
+      messagingSenderId: "225405777645",
+      appId: "1:225405777645:web:1a8786fbf4998fa3e2bee4",
+      measurementId: "G-Q4MXELWHRB"
+    };
+
+    const DAUGHTERS_DB_PATH = 'shared_album_daughters';
+
+    let rtdb = null;
+    let itemsFromRTDB = {};
+
+    function mergeCloudMemories() {
+      const mergedMap = new Map();
+      const deletedIds = window.deletedMemoryIds || new Set();
+
+      if (itemsFromRTDB && typeof itemsFromRTDB === 'object') {
+        Object.values(itemsFromRTDB).forEach(item => {
+          if (item && item.id && !item._deleted && !deletedIds.has(item.id)) {
+            mergedMap.set(item.id, item);
+          }
+        });
+      }
+
+      const list = Array.from(mergedMap.values());
+      if (window.applyRealtimeCloudMemories) {
+        window.applyRealtimeCloudMemories(list);
+      }
+    }
+
+    async function startCloudSync() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        rtdb = getDatabase(app);
+        await signInAnonymously(auth).catch(() => {});
+
+        const rtdbRef = ref(rtdb, DAUGHTERS_DB_PATH);
+        onValue(rtdbRef, (snapshot) => {
+          itemsFromRTDB = snapshot.val() || {};
+          mergeCloudMemories();
+        }, () => {});
+      } catch(e){}
+    }
+
+    window.saveCardToRealtimeCloud = async function(card) {
+      if (rtdb) {
+        try {
+          await set(ref(rtdb, `${DAUGHTERS_DB_PATH}/` + card.id), card);
+        } catch(e){}
+      }
+      try {
+        await fetch(`${firebaseConfig.databaseURL}/${DAUGHTERS_DB_PATH}/${card.id}.json`, {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(card)
+        });
+      } catch(e){}
+    };
+
+    window.deleteCardFromRealtimeCloud = async function(cardId) {
+      if (!window.deletedMemoryIds) window.deletedMemoryIds = new Set();
+      window.deletedMemoryIds.add(cardId);
+      delete itemsFromRTDB[cardId];
+
+      if (rtdb) {
+        try { await remove(ref(rtdb, `${DAUGHTERS_DB_PATH}/` + cardId)); } catch(e){}
+      }
+      try {
+        await fetch(`${firebaseConfig.databaseURL}/${DAUGHTERS_DB_PATH}/${cardId}.json`, { method: 'DELETE' });
+      } catch(e){}
+    };
+
+    startCloudSync();
+  </script>
+
+  <script>
+    // ÚNICAMENTE LA POSTAL DE ROBLOX FAMILIAR COMO ÚNICA TARJETA DEL MURO
+    const defaultPostcards = [
+      {
+        id: 'roblox_familia',
+        stampCode: 'POSTAL #01 · MUNDO ROBLOX VIP',
+        title: 'Nuestro Obby & Tycoon Familiar en Roblox',
+        subtitle: 'Servidor VIP: Papá, Mía, Alexa y Ariadna',
+        category: ['worlds'],
+        mosaicSpan: 'md:col-span-12',
+        canvasHeight: 'h-60 sm:h-72',
+        dateBadge: 'Roblox 4/4 🎮',
+        emoji: '🎮',
+        defaultUrl: 'roblox_familia.html',
+        quote: '“En el juego de la vida siempre jugamos en el mismo equipo. Pase lo que pase, papá siempre será su punto de guardado seguro y su fan número uno.”',
+        tags: ['Roblox Obby', 'Mía', 'Alexa', 'Ariadna'],
+        frameStyle: 'mosaic',
+        isCustom: false
+      }
+    ];
+
+    let cloudRealtimePostcards = [];
+    let allPostcards = [];
+    let currentFilter = 'all';
+    let currentViewMode = 'mosaic';
+    let currentBookPageIndex = 0;
+    let isLightMode = false;
+    let currentEventAlbum = 'ALL';
+    let customEventAlbums = new Set(['General', 'Mía', 'Alexa y Ariadna', 'Salidas con Papá']);
+    let cardIdBeingMoved = null;
+
+    function applyThemeUI() {
+      const icon = document.getElementById('themeIcon');
+      if (isLightMode) {
+        document.body.classList.add('light-mode');
+        if (icon) icon.textContent = '🌙';
+      } else {
+        document.body.classList.remove('light-mode');
+        if (icon) icon.textContent = '☀️';
+      }
+    }
+    function toggleColorTheme() {
+      isLightMode = !isLightMode;
+      applyThemeUI();
+    }
+
+    function syncEventAlbumsFromCards() {
+      cloudRealtimePostcards.forEach(c => {
+        if (c.albumName && c.albumName.trim() !== '') customEventAlbums.add(c.albumName.trim());
+      });
+      renderEventAlbumPills();
+      populateAlbumSelectDropdowns();
+    }
+
+    function renderEventAlbumPills() {
+      const bar = document.getElementById('eventAlbumsFilterBar');
+      if (!bar) return;
+      let html = `<span class="text-[11px] text-pink-300 font-bold mr-1">📂 Álbumes:</span>`;
+      const allActive = currentEventAlbum === 'ALL' ? 'bg-pink-500 text-white font-bold shadow' : 'album-btn-ghost opacity-85';
+      html += `<button onclick="setEventAlbumFilter('ALL')" class="px-2.5 py-1 rounded-xl text-[11px] transition ${allActive}">Todos</button>`;
+
+      Array.from(customEventAlbums).forEach(albumName => {
+        const count = cloudRealtimePostcards.filter(c => (c.albumName || 'General') === albumName).length;
+        const isSelected = currentEventAlbum === albumName;
+        const btnCls = isSelected ? 'bg-pink-500 text-white font-bold shadow' : 'album-btn-ghost opacity-85';
+        html += `<button onclick="setEventAlbumFilter('${albumName.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-xl text-[11px] transition flex items-center gap-1 ${btnCls}"><span>📁 ${albumName}</span>${count > 0 ? `<span class="px-1.5 py-0.2 rounded-full text-[9px] bg-black/25">${count}</span>` : ''}</button>`;
+      });
+      bar.innerHTML = html;
+    }
+
+    function populateAlbumSelectDropdowns() {
+      const creatorSelect = document.getElementById('inputEventAlbum');
+      const moveSelect = document.getElementById('moveTargetAlbumSelect');
+      const albums = Array.from(customEventAlbums);
+
+      if (creatorSelect) {
+        const prev = creatorSelect.value;
+        creatorSelect.innerHTML = albums.map(a => `<option value="${a}">📁 ${a}</option>`).join('') + `<option value="__NEW__">➕ Crear nuevo álbum...</option>`;
+        if (albums.includes(prev)) creatorSelect.value = prev;
+      }
+      if (moveSelect) {
+        moveSelect.innerHTML = albums.map(a => `<option value="${a}">📁 ${a}</option>`).join('');
+      }
+    }
+
+    function setEventAlbumFilter(albumName) {
+      currentEventAlbum = albumName;
+      renderEventAlbumPills();
+      renderAlbumGrid();
+    }
+
+    function checkNewAlbumOption(selectEl) {
+      const wrap = document.getElementById('customNewAlbumInputWrap');
+      if (selectEl.value === '__NEW__') wrap.classList.remove('hidden');
+      else wrap.classList.add('hidden');
+    }
+
+    function openNewEventAlbumModal() {
+      document.getElementById('newEventAlbumName').value = '';
+      document.getElementById('newEventAlbumModal').classList.remove('hidden');
+    }
+    function closeNewEventAlbumModal() { document.getElementById('newEventAlbumModal').classList.add('hidden'); }
+
+    function handleCreateEventAlbum(e) {
+      e.preventDefault();
+      const name = document.getElementById('newEventAlbumName').value.trim();
+      if (!name) return;
+      customEventAlbums.add(name);
+      currentEventAlbum = name;
+      syncEventAlbumsFromCards();
+      closeNewEventAlbumModal();
+      renderAlbumGrid();
+    }
+
+    function openMoveCardModal(cardId) {
+      const card = cloudRealtimePostcards.find(c => c.id === cardId);
+      if (!card) return;
+      cardIdBeingMoved = cardId;
+      populateAlbumSelectDropdowns();
+      document.getElementById('moveTargetAlbumSelect').value = card.albumName || 'General';
+      document.getElementById('moveAlbumModal').classList.remove('hidden');
+    }
+    function closeMoveAlbumModal() { cardIdBeingMoved = null; document.getElementById('moveAlbumModal').classList.add('hidden'); }
+
+    async function confirmMoveToAlbum(e) {
+      e.preventDefault();
+      if (!cardIdBeingMoved) return;
+      const card = cloudRealtimePostcards.find(c => c.id === cardIdBeingMoved);
+      if (!card) return;
+      card.albumName = document.getElementById('moveTargetAlbumSelect').value;
+      syncEventAlbumsFromCards();
+      rebuildAllPostcards();
+      renderAlbumGrid();
+      closeMoveAlbumModal();
+      if (window.saveCardToRealtimeCloud) await window.saveCardToRealtimeCloud(card);
+    }
+
+    function rebuildAllPostcards() {
+      const map = new Map();
+      defaultPostcards.forEach(c => map.set(c.id, c));
+      cloudRealtimePostcards.forEach(c => map.set(c.id, c));
+      allPostcards = Array.from(map.values());
+      syncEventAlbumsFromCards();
+    }
+    rebuildAllPostcards();
+
+    window.applyRealtimeCloudMemories = function(cloudItems) {
+      cloudRealtimePostcards = cloudItems.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+      rebuildAllPostcards();
+      if (currentViewMode === 'mosaic') renderAlbumGrid();
+      else renderBookPage();
+    };
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      const mosaicCont = document.getElementById('mosaicViewContainer');
+      const bookCont = document.getElementById('bookViewContainer');
+      const mosaicBtn = document.getElementById('viewMosaicBtn');
+      const bookBtn = document.getElementById('viewBookBtn');
+
+      if (mode === 'mosaic') {
+        mosaicCont.classList.remove('hidden');
+        bookCont.classList.add('hidden');
+        mosaicBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-500 text-white shadow";
+        bookBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold opacity-80 hover:opacity-100";
+        renderAlbumGrid();
+      } else {
+        mosaicCont.classList.add('hidden');
+        bookCont.classList.remove('hidden');
+        bookBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-500 text-white shadow";
+        mosaicBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold opacity-80 hover:opacity-100";
+        renderBookPage();
+      }
+    }
+
+    function renderAlbumGrid() {
+      const grid = document.getElementById('mosaicGrid');
+      grid.innerHTML = '';
+
+      const filtered = allPostcards.filter(card => {
+        if (currentEventAlbum !== 'ALL') {
+          if (!card.isCustom) return false;
+          if ((card.albumName || 'General') !== currentEventAlbum) return false;
+        }
+
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'postit') return card.frameStyle === 'postit';
+        if (currentFilter === 'photo') return card.frameStyle === 'vintage' || card.frameStyle === 'stamp';
+        return (card.category || []).includes(currentFilter);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-12 text-center py-12 px-4 rounded-3xl bg-black/20 border border-pink-500/20">
+            <div class="text-4xl mb-2">💌✨</div>
+            <h4 class="font-serif-title text-base sm:text-lg text-pink-300 font-bold">Aún no hay notitas o fotos en esta carpeta</h4>
+            <p class="text-xs opacity-75 mt-1 mb-4">¡Deja el primer Post-it o sube una foto juntos!</p>
+            <button onclick="openCreatorStudio('postit')" class="album-btn px-4 py-2 rounded-xl text-xs font-bold">Escribir Nota / Subir Foto</button>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach((card) => {
+        const cardEl = document.createElement('article');
+        cardEl.className = `postcard-card rounded-3xl flex flex-col justify-between ${card.mosaicSpan || 'md:col-span-4'}`;
+        const authorName = card.author || 'Papá ❤️';
+        const recipientName = card.recipient || 'Mis Princesas';
+        const albumTag = card.albumName || 'General';
+
+        if (card.frameStyle === 'postit') {
+          const colorClass = card.postitColor || 'postit-pink';
+          cardEl.innerHTML = `
+            <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+              <div class="postit-note ${colorClass} flex-1 flex flex-col justify-between">
+                <div class="postit-tape"></div>
+                <div>
+                  <div class="flex items-center justify-between border-b border-black/15 pb-2 mb-3">
+                    <div class="flex flex-col text-left text-[11px]">
+                      <span class="font-extrabold text-stone-900">✍️ De: ${authorName}</span>
+                      <span class="font-bold text-rose-900">💖 Para: ${recipientName}</span>
+                    </div>
+                    <span class="text-2xl">${card.emoji || '💌'}</span>
+                  </div>
+                  <h3 class="font-serif-title font-bold text-base text-stone-900 mb-2">${card.title}</h3>
+                  ${card.customImage ? `<img src="${card.customImage}" class="w-full h-36 object-cover rounded-lg mb-3 border border-black/20" alt="Foto">` : ''}
+                  <p class="font-handwriting text-2xl leading-snug text-stone-900 my-2">${card.quote}</p>
+                </div>
+                <div class="mt-4 pt-2 border-t border-black/10 flex items-center justify-between text-[10px] text-stone-800 font-semibold">
+                  <span>📅 ${card.dateBadge || 'Hoy'}</span><span>📁 ${albumTag}</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 pb-4 pt-1 flex items-center justify-between gap-2">
+              <button onclick="openMoveCardModal('${card.id}')" class="album-btn-ghost py-1 px-2.5 rounded-lg text-[10px] text-pink-300">📂 Mover</button>
+              <button onclick="requestDeleteCustomCard('${card.id}')" class="album-btn-ghost py-1 px-2.5 rounded-lg text-[10px] text-rose-400">🗑️ Quitar</button>
+            </div>
+          `;
+          grid.appendChild(cardEl);
+          return;
+        }
+
+        let visualContent = '';
+        if (card.frameStyle === 'vintage' && card.customImage) {
+          visualContent = `
+            <div class="p-4 bg-black/25 flex items-center justify-center">
+              <div class="vintage-photo-frame max-w-[260px] w-full">
+                <img src="${card.customImage}" class="w-full h-44 object-cover block" alt="Foto">
+                <p class="font-handwriting text-stone-800 text-lg text-center mt-2">${card.title}</p>
+              </div>
+            </div>
+          `;
+        } else if (card.frameStyle === 'stamp') {
+          visualContent = `
+            <div class="p-4 bg-black/25 flex items-center justify-center">
+              <div class="postal-stamp-frame max-w-[250px] w-full">
+                ${card.customImage ? `<img src="${card.customImage}" class="w-full h-44 object-cover block" alt="Estampilla">` : `<div class="w-full h-40 bg-pink-100 flex flex-col items-center justify-center p-4 text-center"><span class="text-4xl mb-2">${card.emoji}</span><span class="font-serif-title font-bold text-purple-950 text-sm">${card.title}</span></div>`}
+                <div class="text-[9px] font-pixel text-pink-900 text-center mt-2">DE: ${authorName.toUpperCase()}</div>
+              </div>
+            </div>
+          `;
+        } else {
+          visualContent = `
+            <div class="relative w-full ${card.canvasHeight || 'h-56'} bg-[#090414] overflow-hidden cursor-pointer group" onclick="openPostcardExperience('${card.id}')">
+              <canvas id="preview-canvas-${card.id}" width="320" height="180" class="w-full h-full object-cover pixel-canvas block group-hover:scale-105 transition-transform duration-700"></canvas>
+              <div class="absolute inset-0 bg-gradient-to-t from-[#14072b] via-transparent to-black/25 opacity-90 group-hover:opacity-60 transition-opacity"></div>
+              <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+                <div>
+                  <h3 class="text-base sm:text-lg font-serif-title font-bold text-white drop-shadow-md leading-snug">${card.title}</h3>
+                  <p class="text-xs text-pink-200 font-light drop-shadow">${card.subtitle}</p>
+                </div>
+                <span class="shrink-0 w-9 h-9 rounded-full bg-pink-500 text-white flex items-center justify-center text-sm font-bold shadow-lg">▶</span>
+              </div>
+            </div>
+          `;
+        }
+
+        cardEl.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between px-4 py-3 border-b border-pink-500/20 bg-black/20">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">${card.emoji}</span>
+                <span class="font-pixel text-[8px] text-pink-400 tracking-wider">${card.stampCode}</span>
+              </div>
+              <div class="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-pink-500/20 text-pink-300 border border-pink-500/30">
+                ${card.isCustom ? `📁 ${albumTag}` : card.dateBadge}
+              </div>
+            </div>
+            ${visualContent}
+            <div class="p-4 sm:p-5">
+              ${card.isCustom ? `<div class="flex items-center justify-between gap-2 mb-2.5 text-xs bg-pink-500/10 px-3 py-1.5 rounded-xl border border-pink-500/25"><span>✍️ <strong>De:</strong> ${authorName}</span><span>💖 <strong>Para:</strong> ${recipientName}</span></div>` : ''}
+              <p class="themed-quote font-vt text-lg sm:text-xl leading-snug italic p-3 rounded-xl border-l-2 border-pink-400">${card.quote}</p>
+            </div>
+          </div>
+          <div class="px-4 sm:px-5 pb-4 pt-2 border-t border-pink-500/20 flex items-center justify-between gap-2">
+            ${!card.isCustom ? `
+              <button onclick="openPostcardExperience('${card.id}')" class="album-btn flex-1 py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5"><span>✨</span><span>Entrar al Mundo</span></button>
+              <a href="${card.defaultUrl}" target="_blank" class="album-btn-ghost py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1"><span>🔗</span><span>Link</span></a>
+            ` : `
+              <button onclick="openMoveCardModal('${card.id}')" class="album-btn-ghost py-1.5 px-3 rounded-xl text-[11px] text-pink-300">📂 Mover</button>
+              <button onclick="requestDeleteCustomCard('${card.id}')" class="album-btn-ghost py-1.5 px-3 rounded-xl text-[11px] text-rose-400 ml-auto">🗑️ Borrar</button>
+            `}
+          </div>
+        `;
+        grid.appendChild(cardEl);
+      });
+
+      drawPostcardMiniCanvases();
+    }
+
+    function drawPostcardMiniCanvases() {
+      allPostcards.forEach(card => {
+        if (card.isCustom) return;
+        const c = document.getElementById(`preview-canvas-${card.id}`);
+        if (!c) return;
+        const ctx = c.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        if (card.id === 'roblox_familia') {
+          ctx.fillStyle = '#0284c7'; ctx.fillRect(0, 0, 320, 180);
+          ctx.fillStyle = '#38bdf8'; ctx.fillRect(0, 50, 320, 90);
+          ctx.fillStyle = '#16a34a'; ctx.fillRect(0, 132, 320, 48);
+          ctx.fillStyle = '#4ade80'; ctx.fillRect(0, 132, 320, 4);
+          ['#ef4444','#f59e0b','#eab308','#22c55e','#3b82f6','#ec4899'].forEach((col, idx) => {
+            ctx.fillStyle = col; ctx.fillRect(30 + idx * 42, 65 - (idx % 2) * 12, 28, 7);
+          });
+          // Mía
+          ctx.fillStyle = '#eab68c'; ctx.fillRect(72, 96, 12, 11);
+          ctx.fillStyle = '#f8fafc'; ctx.fillRect(70, 107, 16, 14);
+          ctx.fillStyle = '#1d4ed8'; ctx.fillRect(73, 110, 10, 5);
+          // Papá
+          ctx.fillStyle = '#dead82'; ctx.fillRect(126, 92, 14, 12);
+          ctx.fillStyle = '#7f1d1d'; ctx.fillRect(124, 104, 18, 16);
+          // Alexa
+          ctx.fillStyle = '#eab68c'; ctx.fillRect(182, 98, 12, 11);
+          ctx.fillStyle = '#1e1b4b'; ctx.fillRect(180, 109, 16, 14);
+          ctx.fillStyle = '#f472b6'; ctx.fillRect(184, 112, 3, 3);
+          // Ariadna
+          ctx.fillStyle = '#eab68c'; ctx.fillRect(230, 98, 12, 11);
+          ctx.fillStyle = '#c084fc'; ctx.fillRect(228, 109, 16, 12);
+        }
+      });
+    }
+
+    function renderBookPage(direction = null) {
+      const container = document.getElementById('bookPageContent');
+      const indicator = document.getElementById('bookPageIndicator');
+      const card = allPostcards[currentBookPageIndex] || allPostcards[0];
+
+      if (direction) {
+        container.classList.add(direction === 'next' ? 'flip-next' : 'flip-prev');
+        setTimeout(() => {
+          updateBookDOM(container, indicator, card);
+          container.classList.remove('flip-next', 'flip-prev');
+        }, 280);
+      } else {
+        updateBookDOM(container, indicator, card);
+      }
+    }
+
+    function updateBookDOM(container, indicator, card) {
+      indicator.textContent = `Página ${currentBookPageIndex + 1} de ${allPostcards.length}`;
+      let imgHtml = card.customImage ? `<div class="my-3 flex justify-center"><img src="${card.customImage}" class="max-h-52 object-cover rounded shadow block mx-auto" alt="Foto"></div>` : '';
+
+      container.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between border-b-2 border-pink-800/30 pb-2 mb-3">
+            <div class="flex items-center gap-2"><span class="text-2xl">${card.emoji}</span><h3 class="text-base font-serif-title font-bold text-purple-950">${card.title}</h3></div>
+            <span class="px-2.5 py-0.5 rounded-full bg-pink-700 text-white text-[10px] font-semibold">${card.dateBadge}</span>
+          </div>
+          ${imgHtml}
+          <p class="font-serif-title text-sm sm:text-base text-purple-950 italic my-3 bg-pink-100/80 p-3 rounded-2xl border-l-4 border-pink-600">${card.quote}</p>
+        </div>
+        <div class="mt-4 pt-3 border-t-2 border-pink-800/30 flex items-center justify-between text-xs">
+          <span class="font-handwriting text-xl text-pink-900">Con todo el amor de Papá 👨‍👧‍👧💛</span>
+          <button onclick="openPostcardExperience('${card.id}')" class="album-btn px-3 py-1.5 rounded-xl font-bold">✨ Abrir Mundo</button>
+        </div>
+      `;
+    }
+
+    function nextBookPage() {
+      if (currentBookPageIndex < allPostcards.length - 1) { currentBookPageIndex++; renderBookPage('next'); }
+    }
+    function prevBookPage() {
+      if (currentBookPageIndex > 0) { currentBookPageIndex--; renderBookPage('prev'); }
+    }
+
+    const creatorModal = document.getElementById('creatorModal');
+    function openCreatorStudio(defaultMode = 'postit') {
+      populateAlbumSelectDropdowns();
+      document.getElementById('inputFrameStyle').value = defaultMode;
+      if (currentEventAlbum !== 'ALL') document.getElementById('inputEventAlbum').value = currentEventAlbum;
+      togglePostitFields();
+      creatorModal.classList.remove('hidden');
+    }
+    function closeCreatorStudio() { creatorModal.classList.add('hidden'); }
+
+    function togglePostitFields() {
+      const style = document.getElementById('inputFrameStyle').value;
+      const colorSec = document.getElementById('postitColorSection');
+      if (style === 'postit') colorSec.classList.remove('hidden');
+      else colorSec.classList.add('hidden');
+    }
+
+    function compressUploadedImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          const maxDim = 480;
+          if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          else if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', 0.65));
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleCreatePostcard(e) {
+      e.preventDefault();
+      const title = document.getElementById('inputTitle').value.trim();
+      const author = document.getElementById('inputAuthor').value;
+      const recipient = document.getElementById('inputRecipient').value;
+      const frameStyle = document.getElementById('inputFrameStyle').value;
+      const emoji = document.getElementById('inputEmoji').value || '💖';
+      const quote = document.getElementById('inputQuote').value.trim();
+      const fileInput = document.getElementById('inputImageFile');
+      const selectedColorRadio = document.querySelector('input[name="postitColor"]:checked');
+      const postitColor = selectedColorRadio ? selectedColorRadio.value : 'postit-pink';
+
+      let albumName = document.getElementById('inputEventAlbum').value;
+      if (albumName === '__NEW__') albumName = document.getElementById('inputCustomNewAlbum').value.trim() || 'General';
+      customEventAlbums.add(albumName);
+
+      const nowStr = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+
+      const saveCard = async (imgUrl = null) => {
+        const newCard = {
+          id: 'daughters_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+          createdAt: Date.now(),
+          stampCode: `DE: ${author.toUpperCase()}`,
+          title: title,
+          subtitle: `De: ${author} ➔ Para: ${recipient}`,
+          author: author,
+          recipient: recipient,
+          albumName: albumName,
+          postitColor: postitColor,
+          category: [frameStyle === 'postit' ? 'postit' : 'photo'],
+          mosaicSpan: frameStyle === 'vintage' ? 'md:col-span-6' : 'md:col-span-4',
+          canvasHeight: 'h-48',
+          dateBadge: nowStr,
+          emoji: emoji,
+          quote: `“${quote}”`,
+          tags: [`De: ${author}`, `Para: ${recipient}`, `📁 ${albumName}`],
+          frameStyle: frameStyle,
+          customImage: imgUrl || '',
+          isCustom: true
+        };
+        cloudRealtimePostcards.push(newCard);
+        if (window.saveCardToRealtimeCloud) await window.saveCardToRealtimeCloud(newCard);
+      };
+
+      const finishFlow = () => {
+        rebuildAllPostcards();
+        if (currentViewMode === 'mosaic') renderAlbumGrid();
+        else renderBookPage();
+        closeCreatorStudio();
+        document.getElementById('creatorForm').reset();
+      };
+
+      if (fileInput.files && fileInput.files[0]) {
+        compressUploadedImage(fileInput.files[0], async (compressedUrl) => {
+          await saveCard(compressedUrl);
+          finishFlow();
+        });
+      } else {
+        saveCard(null).then(() => finishFlow());
+      }
+    }
+
+    async function requestDeleteCustomCard(id) {
+      cloudRealtimePostcards = cloudRealtimePostcards.filter(c => c.id !== id);
+      rebuildAllPostcards();
+      if (currentViewMode === 'mosaic') renderAlbumGrid();
+      else renderBookPage();
+      if (window.deleteCardFromRealtimeCloud) await window.deleteCardFromRealtimeCloud(id);
+    }
+
+    function openPostcardExperience(cardId) {
+      const card = allPostcards.find(c => c.id === cardId);
+      if (!card) return;
+
+      const theaterModal = document.getElementById('theaterModal');
+      const iframe = document.getElementById('theaterIframe');
+      document.getElementById('theaterTitle').textContent = card.title;
+      iframe.src = card.defaultUrl;
+      theaterModal.classList.remove('hidden');
+    }
+
+    function closeTheaterModal() {
+      const iframe = document.getElementById('theaterIframe');
+      iframe.src = 'about:blank';
+      document.getElementById('theaterModal').classList.add('hidden');
+    }
+
+    function filterAlbum(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`filter-${cat}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderEventAlbumPills();
+      renderAlbumGrid();
+    }
+
+    let familyTick = 0;
+    const floatingParticles = [
+      { x: 24, y: 18, vy: 0.16, phase: 0.5 },
+      { x: 64, y: 14, vy: 0.18, phase: 1.8 },
+      { x: 102, y: 16, vy: 0.15, phase: 3.1 },
+      { x: 138, y: 20, vy: 0.17, phase: 4.4 }
+    ];
+
+    function pxF(ctx, x, y, w, h, col) {
+      ctx.fillStyle = col;
+      ctx.fillRect(Math.floor(x), Math.floor(y), Math.floor(w), Math.floor(h));
+    }
+
+    function drawMiniHeart(ctx, x, y, col) {
+      pxF(ctx, x + 1, y, 1, 1, col);
+      pxF(ctx, x + 3, y, 1, 1, col);
+      pxF(ctx, x, y + 1, 5, 1, col);
+      pxF(ctx, x + 1, y + 2, 3, 1, col);
+      pxF(ctx, x + 2, y + 3, 1, 1, col);
+    }
+
+    function animateHeroFamilyCanvas() {
+      const c = document.getElementById('heroFamilyFullCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      familyTick++;
+
+      ctx.clearRect(0, 0, 160, 76);
+      pxF(ctx, 0, 0, 160, 64, '#14082e');
+      pxF(ctx, 0, 44, 160, 20, '#27104e');
+      pxF(ctx, 0, 64, 160, 12, '#112a22');
+      pxF(ctx, 0, 64, 160, 2, '#22543d');
+
+      for (let lx = 10; lx < 155; lx += 18) {
+        pxF(ctx, lx, 0, 1, 64, 'rgba(244, 114, 182, 0.15)');
+        const glowY = ((lx * 3 + Math.floor(familyTick * 0.2)) % 56);
+        pxF(ctx, lx, glowY, 2, 2, '#f472b6');
+      }
+
+      const breathe = (Math.floor(familyTick / 28) % 2 === 0) ? 0 : 1;
+      const blink = (familyTick % 130 > 124);
+
+      // 1. MÍA (x: 16)
+      const mx = 16, my = 20 + breathe;
+      pxF(ctx, mx - 2, my, 15, 22, '#0f1319');
+      pxF(ctx, mx - 1, my + 1, 13, 20, '#181e29');
+      pxF(ctx, mx + 2, my + 3, 9, 9, '#eab68c');
+      if (blink) {
+        pxF(ctx, mx + 3, my + 6, 2, 1, '#111827');
+        pxF(ctx, mx + 7, my + 6, 2, 1, '#111827');
+      } else {
+        pxF(ctx, mx + 3, my + 5, 2, 2, '#111827');
+        pxF(ctx, mx + 7, my + 5, 2, 2, '#111827');
+        pxF(ctx, mx + 3, my + 5, 1, 1, '#ffffff');
+        pxF(ctx, mx + 7, my + 5, 1, 1, '#ffffff');
+      }
+      pxF(ctx, mx + 2, my + 8, 2, 1, '#f472b6');
+      pxF(ctx, mx + 5, my + 9, 3, 1, '#be185d');
+      pxF(ctx, mx + 1, my + 12, 11, 13, '#f8fafc');
+      pxF(ctx, mx + 3, my + 15, 7, 4, '#1d4ed8');
+      pxF(ctx, mx + 4, my + 16, 5, 2, '#60a5fa');
+      pxF(ctx, mx - 3, my + 10, 3, 4, '#eab68c');
+      pxF(ctx, mx - 3, my + 8, 1, 2, '#eab68c');
+      pxF(ctx, mx - 1, my + 8, 1, 2, '#eab68c');
+      pxF(ctx, mx + 2, 45, 4, 17, '#111827');
+      pxF(ctx, mx + 7, 45, 4, 17, '#111827');
+      pxF(ctx, mx + 1, 62, 5, 2, '#f8fafc');
+      pxF(ctx, mx + 7, 62, 5, 2, '#f8fafc');
+
+      // 2. PAPÁ (x: 52)
+      const dx = 52, dy = 14 + breathe;
+      pxF(ctx, dx + 1, dy, 14, 6, '#111827');
+      pxF(ctx, dx + 2, dy + 4, 12, 11, '#dead82');
+      pxF(ctx, dx + 2, dy + 6, 5, 4, '#090d16');
+      pxF(ctx, dx + 9, dy + 6, 5, 4, '#090d16');
+      pxF(ctx, dx + 7, dy + 7, 2, 1, '#090d16');
+      pxF(ctx, dx + 3, dy + 7, 3, 2, '#ffffff');
+      pxF(ctx, dx + 10, dy + 7, 3, 2, '#ffffff');
+      pxF(ctx, dx + 4, dy + 7, 2, 2, '#1f2937');
+      pxF(ctx, dx + 11, dy + 7, 2, 2, '#1f2937');
+      pxF(ctx, dx + 2, dy + 11, 12, 4, '#374151');
+      pxF(ctx, dx + 3, dy + 11, 10, 2, '#dead82');
+      pxF(ctx, dx + 6, dy + 12, 4, 1, '#991b1b');
+      pxF(ctx, dx, dy + 15, 16, 16, '#7f1d1d');
+      pxF(ctx, dx + 2, dy + 15, 12, 14, '#991b1b');
+      pxF(ctx, dx + 2, 45, 5, 17, '#1e293b');
+      pxF(ctx, dx + 9, 45, 5, 17, '#1e293b');
+      pxF(ctx, dx + 1, 62, 6, 2, '#090d16');
+      pxF(ctx, dx + 9, 62, 6, 2, '#090d16');
+
+      // 3. ALEXA (x: 92)
+      const ax = 92, ay = 23 + breathe;
+      pxF(ctx, ax + 1, ay, 12, 9, '#1f1610');
+      pxF(ctx, ax + 2, ay + 3, 9, 9, '#eab68c');
+      if (blink) {
+        pxF(ctx, ax + 3, ay + 6, 2, 1, '#1f1610');
+        pxF(ctx, ax + 7, ay + 6, 2, 1, '#1f1610');
+      } else {
+        pxF(ctx, ax + 3, ay + 5, 2, 2, '#1f1610');
+        pxF(ctx, ax + 7, ay + 5, 2, 2, '#1f1610');
+        pxF(ctx, ax + 3, ay + 5, 1, 1, '#ffffff');
+        pxF(ctx, ax + 7, ay + 5, 1, 1, '#ffffff');
+      }
+      pxF(ctx, ax + 5, ay + 9, 3, 1, '#db2777');
+      pxF(ctx, ax + 2, ay + 12, 9, 8, '#1e1b4b');
+      pxF(ctx, ax, ay + 20, 13, 13, '#1e1b4b');
+      pxF(ctx, ax + 3, ay + 14, 2, 2, '#f472b6');
+      pxF(ctx, ax + 7, ay + 16, 2, 2, '#ffffff');
+      pxF(ctx, ax + 2, ay + 23, 2, 2, '#fb7185');
+      pxF(ctx, ax + 6, ay + 25, 2, 2, '#f472b6');
+      pxF(ctx, ax + 9, ay + 22, 2, 2, '#ffffff');
+      pxF(ctx, ax + 4, ay + 29, 2, 2, '#f472b6');
+      pxF(ctx, ax + 3, 56, 3, 6, '#eab68c');
+      pxF(ctx, ax + 7, 56, 3, 6, '#eab68c');
+      pxF(ctx, ax + 2, 62, 4, 2, '#1e1b4b');
+      pxF(ctx, ax + 7, 62, 4, 2, '#1e1b4b');
+
+      // 4. ARIADNA (x: 122)
+      const rx = 122, ry = 23 + breathe;
+      pxF(ctx, rx - 1, ry, 14, 19, '#1f1610');
+      pxF(ctx, rx, ry + 1, 12, 17, '#2d2018');
+      pxF(ctx, rx + 2, ry + 3, 9, 9, '#eab68c');
+      if (blink) {
+        pxF(ctx, rx + 3, ry + 6, 2, 1, '#1f1610');
+        pxF(ctx, rx + 7, ry + 6, 2, 1, '#1f1610');
+      } else {
+        pxF(ctx, rx + 3, ry + 5, 2, 2, '#1f1610');
+        pxF(ctx, rx + 7, ry + 5, 2, 2, '#1f1610');
+        pxF(ctx, rx + 3, ry + 5, 1, 1, '#ffffff');
+        pxF(ctx, rx + 7, ry + 5, 1, 1, '#ffffff');
+      }
+      pxF(ctx, rx + 5, ry + 9, 3, 1, '#db2777');
+      pxF(ctx, rx + 1, ry + 12, 11, 13, '#c084fc');
+      pxF(ctx, rx + 3, ry + 14, 2, 2, '#ffffff');
+      pxF(ctx, rx + 8, ry + 15, 2, 2, '#ffffff');
+      pxF(ctx, rx + 4, ry + 19, 2, 2, '#ffffff');
+      pxF(ctx, rx + 9, ry + 20, 2, 2, '#ffffff');
+      pxF(ctx, rx + 2, 48, 4, 14, '#1e293b');
+      pxF(ctx, rx + 7, 48, 4, 14, '#1e293b');
+      pxF(ctx, rx + 2, 62, 4, 2, '#f472b6');
+      pxF(ctx, rx + 7, 62, 4, 2, '#f472b6');
+
+      pxF(ctx, mx + 12, my + 16, 16, 3, '#eab68c');
+      pxF(ctx, dx + 16, dy + 21, 14, 3, '#dead82');
+      pxF(ctx, ax + 11, ay + 18, 12, 3, '#eab68c');
+
+      floatingParticles.forEach((p, idx) => {
+        p.y -= p.vy;
+        if (p.y < 3) p.y = 22;
+        const sx = p.x + Math.sin(familyTick * 0.05 + p.phase) * 2;
+        drawMiniHeart(ctx, sx, p.y, idx % 2 === 0 ? '#f472b6' : '#fde047');
+      });
+
+      requestAnimationFrame(animateHeroFamilyCanvas);
+    }
+
+    window.onload = () => {
+      applyThemeUI();
+      renderAlbumGrid();
+      animateHeroFamilyCanvas();
+    };
+  </script>
+</body>
+</html>
