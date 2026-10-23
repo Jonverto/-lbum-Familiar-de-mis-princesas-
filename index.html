@@ -110,9 +110,84 @@
     .themed-quote { background: var(--quote-bg); }
     .themed-input { background: var(--input-bg); color: var(--text-main); }
     .themed-modal { background: var(--modal-bg); color: var(--text-main); }
+
+    /* =====================================================================
+       DECORACIÓN DE CUMPLEAÑOS, GLOBOS Y CONTADORES DINÁMICOS
+       ===================================================================== */
+    .bday-top-garland {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    .bday-side-balloon {
+      position: fixed;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0.82;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.45));
+      animation: floatBalloon 4.2s ease-in-out infinite;
+    }
+
+    @keyframes floatBalloon {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+
+    @keyframes cakeBounce {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.08) rotate(-3deg); }
+    }
+
+    .interactive-cake-btn {
+      animation: cakeBounce 2.2s ease-in-out infinite;
+      cursor: pointer;
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .interactive-cake-btn:hover {
+      filter: brightness(1.15) drop-shadow(0 0 18px rgba(251, 191, 36, 0.8));
+      transform: scale(1.12);
+    }
+
+    .bday-primary-card {
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.92) 0%, rgba(157, 23, 77, 0.9) 55%, rgba(49, 16, 101, 0.95) 100%);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 0 22px rgba(236, 72, 153, 0.4), inset 0 0 14px rgba(251, 191, 36, 0.25);
+    }
+
+    .bday-secondary-card {
+      background: rgba(24, 11, 48, 0.82);
+      border: 1px solid rgba(244, 114, 182, 0.45);
+    }
+
+    .bday-unit-box {
+      background: rgba(12, 5, 26, 0.88);
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      color: #fef08a;
+      text-shadow: 0 0 8px rgba(244, 114, 182, 0.6);
+    }
+
+    .confetti-fx {
+      position: fixed;
+      pointer-events: none;
+      z-index: 120;
+      animation: confettiFall 2.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.9) rotate(0deg); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.25) rotate(340deg); }
+    }
   </style>
 </head>
 <body class="relative pb-24">
+
+  <canvas id="bgBdayCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+  <div id="bdayTopGarland" class="bday-top-garland"></div>
+  <div id="bdayAmbientBalloons" class="pointer-events-none"></div>
 
   <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-5">
 
@@ -162,17 +237,20 @@
           </p>
         </div>
 
-        <!-- LIENZO PIXEL ART DE CUERPO COMPLETO: LOS 4 JUNTOS -->
-        <div class="shrink-0 flex flex-col items-center bg-black/45 p-3.5 rounded-2xl border-2 border-amber-400/60 shadow-2xl">
-          <div class="relative w-72 sm:w-80 h-36 rounded-xl overflow-hidden border-2 border-pink-400/80 bg-gradient-to-b from-indigo-950 via-purple-950 to-slate-950 shadow-inner">
+        <!-- LIENZO PIXEL ART DE CUERPO COMPLETO: LOS 4 JUNTOS + CONTADORES DE CUMPLEAÑOS -->
+        <div class="shrink-0 flex flex-col items-center bg-black/45 p-3.5 rounded-2xl border-2 border-amber-400/60 shadow-2xl w-full sm:w-88 max-w-sm">
+          <div class="relative w-full h-36 rounded-xl overflow-hidden border-2 border-pink-400/80 bg-gradient-to-b from-indigo-950 via-purple-950 to-slate-950 shadow-inner">
             <canvas id="heroFamilyFullCanvas" width="160" height="76" class="w-full h-full pixel-canvas block"></canvas>
           </div>
-          <div class="grid grid-cols-4 w-full text-center mt-2 pt-1 border-t border-white/10">
+          <div class="grid grid-cols-4 w-full text-center mt-2 pt-1 border-b border-white/10 pb-2">
             <span class="font-pixel text-[6px] sm:text-[7px] text-sky-300">★ MÍA</span>
             <span class="font-pixel text-[6px] sm:text-[7px] text-amber-300">★ PAPÁ</span>
             <span class="font-pixel text-[6px] sm:text-[7px] text-pink-300">★ ALEXA</span>
             <span class="font-pixel text-[6px] sm:text-[7px] text-purple-300">★ ARIADNA</span>
           </div>
+
+          <!-- PANEL DINÁMICO DE CONTEO REGRESIVO Y FIESTA DE CUMPLEAÑOS -->
+          <div id="birthdayCountdownCenter" class="w-full mt-2.5 flex flex-col gap-2"></div>
         </div>
       </div>
     </header>
@@ -341,6 +419,37 @@
     </div>
     <div class="max-w-5xl w-full mx-auto flex-1 bg-[#090414] border-x border-b border-pink-400/40 rounded-b-2xl overflow-hidden relative flex flex-col">
       <iframe id="theaterIframe" class="w-full h-full flex-1 border-0" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+    </div>
+  </div>
+
+  <!-- MODAL INTERACTIVO DEL PASTEL DE CUMPLEAÑOS DE PAPÁ -->
+  <div id="birthdayCakeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="themed-modal max-w-md w-full rounded-3xl p-6 sm:p-7 border-2 border-amber-400 shadow-[0_0_45px_rgba(244,114,182,0.55)] text-center relative overflow-hidden">
+      <div class="flex justify-center gap-2 text-3xl mb-2 animate-bounce">
+        <span>🎈</span><span>🎂</span><span>🎉</span>
+      </div>
+      <span id="cakeModalBadge" class="inline-block px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/50 text-amber-300 text-[10px] font-bold uppercase tracking-widest mb-2">
+        ¡Sorpresa Especial de Cumpleaños!
+      </span>
+      <h3 id="cakeModalHeadline" class="text-xl sm:text-2xl font-serif-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-purple-300 leading-snug">
+        ¡Feliz Cumpleaños te desea tu Papá!
+      </h3>
+      <div class="my-4 p-4 rounded-2xl bg-black/40 border border-pink-400/40 text-left space-y-2.5">
+        <p id="cakeModalBody" class="font-vt text-xl sm:text-2xl text-amber-50 leading-snug">
+          “Mi princesa hermosa: hoy celebramos la dicha tan grande de tenerte en mi vida. Que todos tus sueños se cumplan, que nunca dejes de sonreír y recuerda que papá siempre estará a tu lado cuidándote.”
+        </p>
+        <p class="font-royal text-base sm:text-lg text-pink-400 text-center pt-2 font-bold">
+          ¡TE AMO MUCHÍSIMO! 👨‍👧‍👧💖✨
+        </p>
+      </div>
+      <div class="flex gap-2 justify-center">
+        <button onclick="blowCandlesEffect(event)" class="album-btn px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg">
+          <span>🕯️✨</span><span>Soplar las Velitas</span>
+        </button>
+        <button onclick="closeBirthdayCakeModal()" class="album-btn-ghost px-4 py-2.5 rounded-xl text-xs font-bold">
+          Cerrar
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1105,10 +1214,325 @@
       requestAnimationFrame(animateHeroFamilyCanvas);
     }
 
+    /* =====================================================================
+       MOTOR DE CUMPLEAÑOS PARA MÍA (OCTUBRE) Y LAS GEMELAS ALEXA Y ARIADNA (12 DE ENERO)
+       - Antes del 1 de Noviembre de 2026: Mía aparece en GRANDE como prioridad
+         y las gemelas abajo en tarjetas compactas.
+       - El Día del Cumpleaños de Mía (o al tocar el pastel): Muestra "¡FELIZ CUMPLEAÑOS MÍA!",
+         globos festivos por toda la página y el Pastel Interactivo con mensaje de Papá.
+       - Desde el 1 de Noviembre de 2026: Se mueve todo y prioriza en GRANDE
+         los contadores de Alexa y Ariadna indicando "¡Se acerca el cumpleaños de las gemelas!".
+       ===================================================================== */
+    // Si el cumpleaños de Mía es otro día de octubre, cambia aquí el número (ej. 24, 25, 28):
+    const MIA_BIRTHDAY_MONTH = 9; // 9 = Octubre (0-indexado)
+    const MIA_BIRTHDAY_DAY = 25;  // Día de Octubre
+    const TWINS_BIRTHDAY_MONTH = 0; // 0 = Enero
+    const TWINS_BIRTHDAY_DAY = 12;  // 12 de Enero
+
+    let previewPartyOverride = null; // null | 'mia_party' | 'twins_priority' | 'twins_party'
+    let bdayAudioCtx = null;
+
+    function playBirthdayMelody() {
+      try {
+        if (!bdayAudioCtx) bdayAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (bdayAudioCtx.state === 'suspended') bdayAudioCtx.resume();
+        // Notas de "Las Mañanitas / Happy Birthday" en cajita musical
+        const notes = [261.63, 261.63, 293.66, 261.63, 349.23, 329.63, 261.63, 261.63, 293.66, 261.63, 392.00, 349.23];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            const osc = bdayAudioCtx.createOscillator();
+            const gain = bdayAudioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, bdayAudioCtx.currentTime);
+            gain.gain.setValueAtTime(0.001, bdayAudioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.08, bdayAudioCtx.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, bdayAudioCtx.currentTime + 0.32);
+            osc.connect(gain);
+            gain.connect(bdayAudioCtx.destination);
+            osc.start();
+            osc.stop(bdayAudioCtx.currentTime + 0.34);
+          }, idx * 210);
+        });
+      } catch (e) {}
+    }
+
+    function spawnConfettiBurst(clientX, clientY) {
+      const icons = ['🎈', '🎉', '✨', '💖', '🎂', '👑', '🎊'];
+      for (let i = 0; i < 18; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-fx text-lg sm:text-xl';
+        el.textContent = icons[i % icons.length];
+        el.style.left = `${clientX || window.innerWidth / 2}px`;
+        el.style.top = `${clientY || window.innerHeight / 2}px`;
+        el.style.setProperty('--dx', `${(Math.random() - 0.5) * 260}px`);
+        el.style.setProperty('--dy', `${(Math.random() - 0.7) * 240}px`);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2100);
+      }
+    }
+
+    function openBirthdayCakeModal(who = 'mia', event = null) {
+      if (event) spawnConfettiBurst(event.clientX, event.clientY);
+      else spawnConfettiBurst(window.innerWidth / 2, window.innerHeight / 2);
+
+      playBirthdayMelody();
+
+      const badge = document.getElementById('cakeModalBadge');
+      const headline = document.getElementById('cakeModalHeadline');
+      const body = document.getElementById('cakeModalBody');
+
+      if (who === 'twins') {
+        badge.textContent = '🎂 ¡Pastel de Cumpleaños para Alexa y Ariadna! 🎂';
+        headline.textContent = '¡Feliz Cumpleaños Alexa y Ariadna, les desea su Papá!';
+        body.textContent = '“Mis gemelas hermosas: gracias por iluminar mi vida con su ternura, sus risas y esa complicidad tan bonita que tienen. ¡Feliz cumpleaños, princesas! Papá siempre estará con ustedes cuidándolas.”';
+      } else {
+        badge.textContent = '🎂 ¡Pastel de Cumpleaños para Mía! 🎂';
+        headline.textContent = '¡Feliz Cumpleaños Mía, te desea tu Papá!';
+        body.textContent = '“Mi Mía hermosa: qué orgullo tan grande verte cumplir un año más llena de luz, inteligencia y alegría. ¡Feliz cumpleaños, mi niña linda! Recuerda que tu papá siempre será tu mejor amigo y tu apoyo incondicional.”';
+      }
+
+      document.getElementById('birthdayCakeModal').classList.remove('hidden');
+    }
+
+    function closeBirthdayCakeModal() {
+      document.getElementById('birthdayCakeModal').classList.add('hidden');
+    }
+
+    function blowCandlesEffect(event) {
+      spawnConfettiBurst(event.clientX, event.clientY);
+      playBirthdayMelody();
+      document.getElementById('cakeModalHeadline').textContent = '✨ ¡Pide un deseo! ¡Te Amo Muchísimo! ✨';
+    }
+
+    function getCountdownParts(targetDate, now) {
+      const diff = Math.max(0, targetDate - now);
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return {
+        days,
+        hours: String(hours).padStart(2, '0'),
+        minutes: String(minutes).padStart(2, '0'),
+        seconds: String(seconds).padStart(2, '0')
+      };
+    }
+
+    function getNextBirthdayDate(month, day, now) {
+      let year = now.getFullYear();
+      let candidate = new Date(year, month, day, 0, 0, 0);
+      const endOfBday = new Date(year, month, day, 23, 59, 59);
+      if (now > endOfBday) {
+        candidate = new Date(year + 1, month, day, 0, 0, 0);
+      }
+      return candidate;
+    }
+
+    function decoratePageForBirthday(isPartyActive, labelText) {
+      const garland = document.getElementById('bdayTopGarland');
+      const balloons = document.getElementById('bdayAmbientBalloons');
+      if (!garland || !balloons) return;
+
+      if (isPartyActive) {
+        garland.innerHTML = `
+          <div class="w-full flex justify-between items-start px-1 sm:px-4 opacity-95">
+            ${Array.from({ length: 12 }).map((_, i) => {
+              const cols = [
+                'from-pink-500 to-rose-600 border-pink-200',
+                'from-amber-400 to-orange-500 border-yellow-200',
+                'from-sky-400 to-indigo-600 border-sky-200',
+                'from-purple-500 to-fuchsia-700 border-purple-200'
+              ];
+              const icons = ['🎈', '🎂', '🎉', '👑', '✨', '🎁'];
+              return `<div class="flex-1 mx-0.5 h-6 sm:h-8 bg-gradient-to-b ${cols[i % cols.length]} border-t flex items-center justify-center text-[10px] sm:text-xs shadow-md" style="clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);">${icons[i % icons.length]}</div>`;
+            }).join('')}
+          </div>
+        `;
+        balloons.innerHTML = `
+          <div class="bday-side-balloon top-20 left-2 sm:left-5 flex flex-col items-center gap-2 text-2xl sm:text-3xl">
+            <span>🎈</span><span class="text-xl">🎉</span>
+          </div>
+          <div class="bday-side-balloon top-20 right-2 sm:right-5 flex flex-col items-center gap-2 text-2xl sm:text-3xl" style="animation-delay: 1.1s;">
+            <span>🎈</span><span class="text-xl">🎂</span>
+          </div>
+          <div class="bday-side-balloon bottom-20 left-3 sm:left-6 hidden xl:flex flex-col items-center gap-2 text-2xl" style="animation-delay: 0.6s;">
+            <span>🎁</span><span>🎈</span>
+          </div>
+          <div class="bday-side-balloon bottom-20 right-3 sm:right-6 hidden xl:flex flex-col items-center gap-2 text-2xl" style="animation-delay: 1.6s;">
+            <span>🎊</span><span>👑</span>
+          </div>
+        `;
+      } else {
+        garland.innerHTML = `
+          <div class="w-full h-5 flex justify-around items-center px-2 opacity-85">
+            ${Array.from({ length: 12 }).map((_, i) => `<span class="text-xs sm:text-sm">${['🎈', '✨', '👑', '💖', '🎂', '🌟'][i % 6]}</span>`).join('')}
+          </div>
+        `;
+        balloons.innerHTML = `
+          <div class="bday-side-balloon top-24 left-2 sm:left-4 hidden lg:flex flex-col items-center gap-2 text-xl opacity-65">
+            <span>🎈</span><span>✨</span>
+          </div>
+          <div class="bday-side-balloon top-24 right-2 sm:right-4 hidden lg:flex flex-col items-center gap-2 text-xl opacity-65" style="animation-delay: 1.2s;">
+            <span>🎈</span><span>👑</span>
+          </div>
+        `;
+      }
+    }
+
+    function toggleBirthdayPreviewMode() {
+      if (previewPartyOverride === null) previewPartyOverride = 'mia_party';
+      else if (previewPartyOverride === 'mia_party') previewPartyOverride = 'twins_priority';
+      else previewPartyOverride = null;
+      updateBirthdaysWidget();
+    }
+
+    function updateBirthdaysWidget() {
+      const container = document.getElementById('birthdayCountdownCenter');
+      if (!container) return;
+
+      const now = new Date();
+      const novFirst2026 = new Date(2026, 10, 1, 0, 0, 0); // 1 de Noviembre de 2026
+
+      const isMiaActualBday = (now.getMonth() === MIA_BIRTHDAY_MONTH && now.getDate() === MIA_BIRTHDAY_DAY);
+      const isTwinsActualBday = (now.getMonth() === TWINS_BIRTHDAY_MONTH && now.getDate() === TWINS_BIRTHDAY_DAY);
+
+      // Determinar prioridad según la fecha (o vista previa de prueba)
+      let mode = 'mia_priority';
+      if (previewPartyOverride === 'mia_party' || isMiaActualBday) {
+        mode = 'mia_party';
+      } else if (previewPartyOverride === 'twins_priority' || now >= novFirst2026) {
+        mode = isTwinsActualBday ? 'twins_party' : 'twins_priority';
+      }
+
+      const nextMiaDate = getNextBirthdayDate(MIA_BIRTHDAY_MONTH, MIA_BIRTHDAY_DAY, now);
+      const nextTwinsDate = getNextBirthdayDate(TWINS_BIRTHDAY_MONTH, TWINS_BIRTHDAY_DAY, now);
+
+      const miaT = getCountdownParts(nextMiaDate, now);
+      const twinsT = getCountdownParts(nextTwinsDate, now);
+
+      if (mode === 'mia_party') {
+        decoratePageForBirthday(true, 'Mía');
+        container.innerHTML = `
+          <!-- TARJETA GRANDE DE ¡FELIZ CUMPLEAÑOS MÍA! CON PASTEL INTERACTIVO -->
+          <div class="bday-primary-card rounded-2xl p-3 text-center relative overflow-hidden">
+            <div class="flex items-center justify-between text-[9px] text-amber-200 font-bold uppercase tracking-wider mb-1">
+              <span>🎈🎉 ¡LLEGÓ EL GRAN DÍA!</span>
+              <button onclick="toggleBirthdayPreviewMode()" class="text-[8px] bg-black/40 px-1.5 py-0.5 rounded text-pink-200" title="Cambiar vista">🔄</button>
+            </div>
+            <h3 class="font-pixel text-xs sm:text-sm text-amber-300 drop-shadow mb-1 animate-pulse">
+              ¡FELIZ CUMPLEAÑOS MÍA! 👑
+            </h3>
+            <p class="font-vt text-base text-pink-100 leading-tight mb-2">
+              ¡Presiona tu pastel interactivo para ver la felicitación de Papá!
+            </p>
+            <button onclick="openBirthdayCakeModal('mia', event)" class="interactive-cake-btn w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xl border-2 border-white/80">
+              <span class="text-2xl">🎂</span>
+              <span>TOCAR PASTEL DE CUMPLEAÑOS</span>
+              <span class="text-lg">🎈</span>
+            </button>
+          </div>
+
+          <!-- CONTADORES COMPACTOS DE ALEXA Y ARIADNA ABAJO -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="bday-secondary-card rounded-xl p-2 text-center">
+              <div class="text-[8px] font-bold text-pink-300 uppercase">🌸 Cumple Alexa (12 Ene)</div>
+              <div class="font-pixel text-[9px] text-amber-200 mt-1">${twinsT.days}d : ${twinsT.hours}h : ${twinsT.seconds}s</div>
+            </div>
+            <div class="bday-secondary-card rounded-xl p-2 text-center">
+              <div class="text-[8px] font-bold text-purple-300 uppercase">🐰 Cumple Ariadna (12 Ene)</div>
+              <div class="font-pixel text-[9px] text-amber-200 mt-1">${twinsT.days}d : ${twinsT.hours}h : ${twinsT.seconds}s</div>
+            </div>
+          </div>
+        `;
+      } else if (mode === 'mia_priority') {
+        decoratePageForBirthday(false, 'Mía');
+        container.innerHTML = `
+          <!-- CUADRO PRINCIPAL MÁS GRANDE PARA MÍA (OCTUBRE 2026) -->
+          <div class="bday-primary-card rounded-2xl p-3 text-center relative overflow-hidden">
+            <div class="flex items-center justify-between text-[9px] font-bold text-amber-300 uppercase tracking-wider mb-1">
+              <span>🎈👑 CUMPLEAÑOS DE MÍA</span>
+              <button onclick="openBirthdayCakeModal('mia', event)" class="text-[9px] bg-amber-400/25 border border-amber-300/60 px-2 py-0.5 rounded-full text-amber-200 hover:bg-amber-400 hover:text-black transition" title="Probar Pastel Interactivo">🎂 Pastel</button>
+            </div>
+            <p class="font-serif-title italic text-xs text-pink-100 mb-2">
+              ✨ ¡El conteo regresivo para el gran día de Mía! ✨
+            </p>
+            <div class="grid grid-cols-4 gap-1.5 text-center">
+              <div class="bday-unit-box rounded-lg py-1.5 px-1 flex flex-col items-center">
+                <span class="font-pixel text-xs sm:text-sm">${miaT.days}</span>
+                <span class="text-[7px] text-pink-200 uppercase mt-1">Días</span>
+              </div>
+              <div class="bday-unit-box rounded-lg py-1.5 px-1 flex flex-col items-center">
+                <span class="font-pixel text-xs sm:text-sm">${miaT.hours}</span>
+                <span class="text-[7px] text-pink-200 uppercase mt-1">Horas</span>
+              </div>
+              <div class="bday-unit-box rounded-lg py-1.5 px-1 flex flex-col items-center">
+                <span class="font-pixel text-xs sm:text-sm">${miaT.minutes}</span>
+                <span class="text-[7px] text-pink-200 uppercase mt-1">Min</span>
+              </div>
+              <div class="bday-unit-box rounded-lg py-1.5 px-1 flex flex-col items-center">
+                <span class="font-pixel text-xs sm:text-sm">${miaT.seconds}</span>
+                <span class="text-[7px] text-pink-200 uppercase mt-1">Seg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- LOS OTROS 2 CONTADORES DE ALEXA Y ARIADNA (12 DE ENERO) -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div class="bday-secondary-card rounded-xl p-2 text-center">
+              <div class="text-[8px] font-bold text-pink-300 uppercase">🌸 Alexa · 12 Ene</div>
+              <div class="font-pixel text-[9px] text-amber-200 mt-1">${twinsT.days}d ${twinsT.hours}h ${twinsT.seconds}s</div>
+            </div>
+            <div class="bday-secondary-card rounded-xl p-2 text-center">
+              <div class="text-[8px] font-bold text-purple-300 uppercase">🐰 Ariadna · 12 Ene</div>
+              <div class="font-pixel text-[9px] text-amber-200 mt-1">${twinsT.days}d ${twinsT.hours}h ${twinsT.seconds}s</div>
+            </div>
+          </div>
+        `;
+      } else {
+        // DESDE EL 1 DE NOVIEMBRE DE 2026: PRIORIZA EN UN CUADRO MÁS GRANDE A LAS GEMELAS ALEXA Y ARIADNA
+        decoratePageForBirthday(mode === 'twins_party', 'Alexa y Ariadna');
+        container.innerHTML = `
+          <div class="bday-primary-card rounded-2xl p-3 text-center relative overflow-hidden">
+            <div class="flex items-center justify-between text-[9px] font-bold text-amber-300 uppercase tracking-wider mb-1">
+              <span>👯‍♀️🎈 ¡SE ACERCA EL CUMPLEAÑOS DE LAS GEMELAS!</span>
+              <button onclick="openBirthdayCakeModal('twins', event)" class="text-[9px] bg-amber-400/25 border border-amber-300/60 px-2 py-0.5 rounded-full text-amber-200 hover:bg-amber-400 hover:text-black transition">🎂 Pastel</button>
+            </div>
+            <p class="font-serif-title italic text-xs text-pink-100 mb-2">
+              ✨ Conteo regresivo para el gran día de Alexa y Ariadna (12 de Enero) ✨
+            </p>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <div class="bg-black/35 border border-pink-400/50 rounded-xl p-2">
+                <div class="text-[9px] font-bold text-pink-300">🌸 ALEXA 💖</div>
+                <div class="font-pixel text-[10px] text-amber-300 mt-1">${twinsT.days}d : ${twinsT.hours}h : ${twinsT.minutes}m : ${twinsT.seconds}s</div>
+              </div>
+              <div class="bg-black/35 border border-purple-400/50 rounded-xl p-2">
+                <div class="text-[9px] font-bold text-purple-300">🐰 ARIADNA 💜</div>
+                <div class="font-pixel text-[10px] text-amber-300 mt-1">${twinsT.days}d : ${twinsT.hours}h : ${twinsT.minutes}m : ${twinsT.seconds}s</div>
+              </div>
+            </div>
+            ${mode === 'twins_party' ? `
+              <button onclick="openBirthdayCakeModal('twins', event)" class="interactive-cake-btn w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xl">
+                <span class="text-xl">🎂</span><span>¡FELIZ CUMPLEAÑOS GEMELAS! TOCAR PASTEL</span>
+              </button>
+            ` : ''}
+          </div>
+
+          <!-- CONTADOR COMPACTO DE MÍA ABAJO -->
+          <div class="bday-secondary-card rounded-xl p-2 flex items-center justify-between px-3">
+            <span class="text-[9px] font-bold text-sky-300 uppercase">🌟 Próximo Cumple de Mía (Octubre)</span>
+            <span class="font-pixel text-[9px] text-amber-200">${miaT.days} días · ${miaT.hours}h · ${miaT.seconds}s</span>
+          </div>
+        `;
+      }
+    }
+
     window.onload = () => {
       applyThemeUI();
       renderAlbumGrid();
       animateHeroFamilyCanvas();
+      updateBirthdaysWidget();
+      setInterval(updateBirthdaysWidget, 1000);
     };
   </script>
 </body>
